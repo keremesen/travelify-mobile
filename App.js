@@ -5,63 +5,45 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Home from "./screens/Home";
+import Settings from "./screens/Settings";
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="go to signin"
-        onPress={() => navigation.navigate("SignIn")}
-      ></Button>
-    </View>
-  );
-}
-function SignIn() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>siginninininnn</Text>
-    </View>
-  );
-}
-
-function ProfileScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Profile Screen</Text>
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-    </View>
-  );
-}
 
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
+
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: "blue",
+        tabBarActiveTintColor: "#3F51B5",       
+      //  headerShown:false,  
+      headerStyle: {
+        backgroundColor: '#3F51B5',
+      },
+      headerTintColor: '#fff',
       }}
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={Home}
         options={{
           tabBarLabel: "Home",
+          headerShown:false,  
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="Settings"
+        component={Settings}
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: "Settings",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
+            <MaterialCommunityIcons name="cog" color={color} size={size} />
           ),
         }}
       />
@@ -77,11 +59,6 @@ export default function App() {
           name="Main"
           component={MyTabs}
           options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SignIn"
-          component={SignIn}
-          options={{ presentation: "fullScreenModal" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
