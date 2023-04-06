@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import { StyleSheet, View, Text, Dimensions, Image } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
 import { REACT_APP_GOOGLE_MAP_API_KEY } from "@env";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+import { getPlacesData } from "../api";
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,7 +16,9 @@ const ASPECT_RATIO = width / height;
 
 export default function Home() {
   const [location, setLocation] = useState(null);
-  const [loading, setloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [places, setPlaces] = useState([]);
+
   const onPlaceSelected = (details) => {
     setLocation({
       latitude: details?.geometry.location.lat || 0,
@@ -29,6 +34,7 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
@@ -37,7 +43,7 @@ export default function Home() {
 
       let { coords } = await Location.getCurrentPositionAsync({});
       setLocation(coords);
-      setloading(true);
+      setIsLoading(false);
     })();
   }, []);
 
@@ -45,14 +51,23 @@ export default function Home() {
     return null;
   }
 
-  const handleRegionChangeComplete = (region) => {
+  const handleRegionChangeComplete = async (region) => {
     setLocation(region);
-    console.log(region)
+    getPlacesData(region).then((data) => {
+      setPlaces(data);
+      setIsLoading(false);
+    });
   };
 
   return (
     <View style={styles.container}>
-      {loading ? (
+      {isLoading ? (
+        <>
+          <View style={{ flex: 1 }}>
+            <Text>Yükleniyor</Text>
+          </View>
+        </>
+      ) : (
         <>
           <MapView
             style={styles.map}
@@ -81,6 +96,37 @@ export default function Home() {
                 <Text>Buradasın</Text>
               </Callout>
             </Marker>
+            {places?.map((place, index) => {
+              const latitude = parseFloat(place.latitude);
+              const longitude = parseFloat(place.longitude);
+
+              if (isNaN(latitude) || isNaN(longitude)) {
+                // Handle invalid coordinates
+                return null;
+              }
+
+              return (
+                <Marker key={index} coordinate={{ latitude, longitude }}>
+                  <Callout>
+                    <View>
+                      <Text>
+                        <Image
+                          style={{ height: 100, width: 100 }}
+                          source={{
+                            uri: place.photo
+                              ? place.photo.images.large.url
+                              : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg",
+                          }}
+                          resizeMode="cover"
+                        />
+                      </Text>
+                      <Text>{place.name}</Text>
+                      <Text>{place.rating}</Text>
+                    </View>
+                  </Callout>
+                </Marker>
+              );
+            })}
           </MapView>
 
           <GooglePlacesAutocomplete
@@ -101,12 +147,6 @@ export default function Home() {
               textInput: styles.autocompleteTextInput,
             }}
           />
-        </>
-      ) : (
-        <>
-          <View style={{ flex: 1 }}>
-            <Text>Yükleniyor</Text>
-          </View>
         </>
       )}
     </View>
