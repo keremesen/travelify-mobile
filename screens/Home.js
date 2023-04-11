@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import MapView, { Callout, Marker } from "react-native-maps";
-import { StyleSheet, View, Text, Dimensions, Image } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Constants from "expo-constants";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
 import * as Location from "expo-location";
-import { REACT_APP_GOOGLE_MAP_API_KEY } from "@env";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { getPlacesData } from "../api";
+import SearchBar from "../components/SearchBar/SearchBar";
+import Map from "../components/Map/Map";
+import List from "../components/List/List";
+import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,91 +61,20 @@ export default function Home() {
     <View style={styles.container}>
       {isLoading ? (
         <>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, marginTop: 50 }}>
             <Text>Yükleniyor</Text>
           </View>
         </>
       ) : (
-        <>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-            region={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: location.latitudeDelta,
-              longitudeDelta: location.longitudeDelta,
-            }}
-            onRegionChangeComplete={handleRegionChangeComplete}
-            provider="google"
-          >
-            <Marker
-              coordinate={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-              }}
-            >
-              <Callout>
-                <Text>Buradasın</Text>
-              </Callout>
-            </Marker>
-            {places?.map((place, index) => {
-              const latitude = parseFloat(place.latitude);
-              const longitude = parseFloat(place.longitude);
-
-              if (isNaN(latitude) || isNaN(longitude)) {
-                // Handle invalid coordinates
-                return null;
-              }
-
-              return (
-                <Marker key={index} coordinate={{ latitude, longitude }}>
-                  <Callout>
-                    <View>
-                      <Text>
-                        <Image
-                          style={{ height: 100, width: 100 }}
-                          source={{
-                            uri: place.photo
-                              ? place.photo.images.large.url
-                              : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg",
-                          }}
-                          resizeMode="cover"
-                        />
-                      </Text>
-                      <Text>{place.name}</Text>
-                      <Text>{place.rating}</Text>
-                    </View>
-                  </Callout>
-                </Marker>
-              );
-            })}
-          </MapView>
-
-          <GooglePlacesAutocomplete
-            placeholder="Search"
-            fetchDetails
-            GooglePlacesSearchQuery={{
-              rankby: "distance",
-            }}
-            onPress={(data, details) => {
-              onPlaceSelected(details);
-            }}
-            query={{
-              key: REACT_APP_GOOGLE_MAP_API_KEY,
-              language: "en",
-            }}
-            styles={{
-              container: styles.autocompleteContainer,
-              textInput: styles.autocompleteTextInput,
-            }}
+        <ScrollView style={{width:"100%", height:"100%"}} >
+          <Map
+            places={places}
+            handleRegionChangeComplete={handleRegionChangeComplete}
+            location={location}
           />
-        </>
+          <SearchBar onPlaceSelected={onPlaceSelected} />
+          <List places={places} />
+        </ScrollView>
       )}
     </View>
   );
@@ -159,19 +86,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-  },
-  map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-  },
-  autocompleteContainer: {
-    position: "absolute",
-    top: 50,
-    left: 10,
-    right: 10,
-  },
-  autocompleteTextInput: {
-    backgroundColor: "#FFF",
-    fontSize: 16,
   },
 });
