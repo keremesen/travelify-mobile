@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import * as Location from "expo-location";
 
 import { getPlacesData } from "../api";
-import SearchBar from "../components/SearchBar/SearchBar";
-import Map from "../components/Map/Map";
-import List from "../components/List/List";
+import SearchBar from "../components/SearchBar.js";
+import Map from "../components/Map.js";
+import List from "../components/List.js";
 import { ScrollView } from "react-native-gesture-handler";
+import PlaceDetails from "../components/PlaceDetails";
 
 const { width, height } = Dimensions.get("window");
 
@@ -16,6 +17,7 @@ export default function Home() {
   const [location, setLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [places, setPlaces] = useState([]);
+  const [type, setType] = useState("restaurants");
 
   const onPlaceSelected = (details) => {
     setLocation({
@@ -51,14 +53,14 @@ export default function Home() {
 
   const handleRegionChangeComplete = async (region) => {
     setLocation(region);
-    getPlacesData(region).then((data) => {
+    getPlacesData(region, type).then((data) => {
       setPlaces(data);
       setIsLoading(false);
     });
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-white items-center justify-center">
       {isLoading ? (
         <>
           <View style={{ flex: 1, marginTop: 50 }}>
@@ -66,25 +68,19 @@ export default function Home() {
           </View>
         </>
       ) : (
-        <ScrollView style={{width:"100%", height:"100%"}} >
+        <>
           <Map
             places={places}
             handleRegionChangeComplete={handleRegionChangeComplete}
             location={location}
           />
           <SearchBar onPlaceSelected={onPlaceSelected} />
-          <List places={places} />
-        </ScrollView>
+          <ScrollView className="w-full">
+            <List type={type} setType={setType} />
+            <PlaceDetails places={places} />
+          </ScrollView>
+        </>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
