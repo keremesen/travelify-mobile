@@ -1,8 +1,12 @@
 import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
 
 const Map = ({ location, handleRegionChangeComplete, places }) => {
+  const [currentLocation, _] = useState({
+    latitude: location.latitude,
+    longitude: location.longitude,
+  });
   return (
     <MapView
       style={styles.map}
@@ -23,9 +27,10 @@ const Map = ({ location, handleRegionChangeComplete, places }) => {
     >
       <Marker
         coordinate={{
-          latitude: location.latitude,
-          longitude: location.longitude,
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
         }}
+        pinColor={"green"}
       >
         <Callout>
           <Text>Buradasın</Text>
