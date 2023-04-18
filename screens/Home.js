@@ -18,19 +18,8 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [places, setPlaces] = useState([]);
   const [type, setType] = useState("restaurants");
-
-  const onPlaceSelected = (details) => {
-    setLocation({
-      latitude: details?.geometry.location.lat || 0,
-      longitude: details?.geometry.location.lng || 0,
-      latitudeDelta:
-        details?.geometry.viewport.northeast.lat -
-        details?.geometry.viewport.southwest.lat,
-      longitudeDelta:
-        details?.geometry.viewport.northeast.lat -
-        details?.geometry.viewport.southwest.lat * ASPECT_RATIO,
-    });
-  };
+  const [rating, setRating] = useState("");
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -47,6 +36,24 @@ export default function Home() {
     })();
   }, []);
 
+  useEffect(() => {
+    const filteredPlaces = places.filter((place) => place.rating > rating);
+    setFilteredPlaces(filteredPlaces);
+  }, [rating]);
+
+  const onPlaceSelected = (details) => {
+    setLocation({
+      latitude: details?.geometry.location.lat || 0,
+      longitude: details?.geometry.location.lng || 0,
+      latitudeDelta:
+        details?.geometry.viewport.northeast.lat -
+        details?.geometry.viewport.southwest.lat,
+      longitudeDelta:
+        details?.geometry.viewport.northeast.lat -
+        details?.geometry.viewport.southwest.lat * ASPECT_RATIO,
+    });
+  };
+
   if (!location) {
     return null;
   }
@@ -54,7 +61,8 @@ export default function Home() {
   const handleRegionChangeComplete = async (region) => {
     setLocation(region);
     getPlacesData(region, type).then((data) => {
-      setPlaces(data);
+      setPlaces(data?.filter((place) => place.name && place.num_reviews > 0));
+      setFilteredPlaces([]);
       setIsLoading(false);
     });
   };
@@ -70,14 +78,21 @@ export default function Home() {
       ) : (
         <>
           <Map
-            places={places}
+            places={filteredPlaces.length ? filteredPlaces : places}
             handleRegionChangeComplete={handleRegionChangeComplete}
             location={location}
           />
           <SearchBar onPlaceSelected={onPlaceSelected} />
           <ScrollView className="w-full">
-            <List type={type} setType={setType} />
-            <PlaceDetails places={places} />
+            <List
+              type={type}
+              setType={setType}
+              rating={rating}
+              setRating={setRating}
+            />
+            <PlaceDetails
+              places={filteredPlaces.length ? filteredPlaces : places}
+            />
           </ScrollView>
         </>
       )}
