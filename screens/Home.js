@@ -71,12 +71,12 @@ export default function Home() {
     <View className="flex-1 bg-white items-center justify-center">
       {isLoading ? (
         <>
-          <View style={{ flex: 1, marginTop: 50 }}>
-            <Text>Yükleniyor</Text>
+          <View className="flex-1 items-center justify-center">
+            <Text className="font-bold text-3xl" >Yükleniyor</Text>
           </View>
         </>
       ) : (
-        <>
+        <View className="flex-1">
           <Map
             places={filteredPlaces.length ? filteredPlaces : places}
             handleRegionChangeComplete={handleRegionChangeComplete}
@@ -94,7 +94,7 @@ export default function Home() {
               places={filteredPlaces.length ? filteredPlaces : places}
             />
           </ScrollView>
-        </>
+        </View>
       )}
     </View>
   );

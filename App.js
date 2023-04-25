@@ -6,24 +6,40 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Home from "./screens/Home";
-import Settings from "./screens/Settings";
-
+import Favorites from "./screens/Favorites";
+import { PlacesProvider } from "./context/PlacesContext";
 
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    <PlacesProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Main">
+          <Stack.Screen
+            name="Main"
+            component={MyTabs}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PlacesProvider>
+  );
+}
 
 function MyTabs() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: "#3F51B5",       
-      //  headerShown:false,  
-      headerStyle: {
-        backgroundColor: '#3F51B5',
-      },
-      headerTintColor: '#fff',
+        tabBarActiveTintColor: "#3F51B5",
+        //  headerShown:false,
+        headerStyle: {
+          backgroundColor: "#3F51B5",
+        },
+        headerTintColor: "#fff",
       }}
     >
       <Tab.Screen
@@ -31,36 +47,22 @@ function MyTabs() {
         component={Home}
         options={{
           tabBarLabel: "Home",
-          headerShown:false,  
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="Settings"
-        component={Settings}
+        name="Favorites"
+        component={Favorites}
         options={{
-          tabBarLabel: "Settings",
+          tabBarLabel: "Favorites",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={size} />
+            <MaterialCommunityIcons name="star" color={color} size={size} />
           ),
         }}
       />
     </Tab.Navigator>
-  );
-}
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen
-          name="Main"
-          component={MyTabs}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
   );
 }

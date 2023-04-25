@@ -1,13 +1,23 @@
 import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
 import React, { useState } from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
+import MyModal from "./Modal";
 
 const Map = ({ location, handleRegionChangeComplete, places }) => {
   const [currentLocation, _] = useState({
     latitude: location.latitude,
     longitude: location.longitude,
   });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+
+  const handleCalloutPress = (place) => {
+    setSelectedPlace(place);
+    setModalVisible(true);
+  };
+
   return (
+    <>
     <MapView
       style={styles.map}
       initialRegion={{
@@ -46,8 +56,14 @@ const Map = ({ location, handleRegionChangeComplete, places }) => {
         }
 
         return (
-          <Marker key={index} coordinate={{ latitude, longitude }}>
+          
+          <Marker
+            key={index}
+            coordinate={{ latitude, longitude }}
+            onCalloutPress={() => handleCalloutPress(place)}
+          >
             <Callout>
+           
               <View>
                 <Text>
                   <Image
@@ -68,6 +84,12 @@ const Map = ({ location, handleRegionChangeComplete, places }) => {
         );
       })}
     </MapView>
+     <MyModal
+     modalVisible={modalVisible}
+     setModalVisible={setModalVisible}
+     place={selectedPlace}
+   />
+    </>
   );
 };
 
@@ -76,6 +98,6 @@ export default Map;
 const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 200,
+    height: Dimensions.get("window").height - 300,
   },
 });
