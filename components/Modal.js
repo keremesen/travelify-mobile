@@ -70,13 +70,15 @@ const MyModal = ({ modalVisible, setModalVisible, place }) => {
                   dispatch({
                     type: "added",
                     id: nextId++,
-                    image: place?.photo.images.large.url,
+                    image: place?.photo.images.large.url
+                      ? place.photo.images.large.url
+                      : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg",
                     name: place?.name,
                     address: place?.address,
                   });
                 }}
               >
-                <Text style={styles.textStyle}>at fava bekle</Text>
+                <Text style={styles.textStyle}>Favorilere Ekle</Text>
               </Pressable>
             </View>
           </View>

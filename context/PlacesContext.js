@@ -60,18 +60,4 @@ const initialPlaces = [
     name: "kamilinyeri",
     address: "bbbb",
   },
-  {
-    id: 2,
-    image:
-      "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg",
-    name: "gülnameninyeri",
-    address: "ccccc",
-  },
-  {
-    id: 3,
-    image:
-      "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg",
-    name: "mustafanınyeri",
-    address: "dddddd",
-  },
 ];
