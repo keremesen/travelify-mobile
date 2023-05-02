@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, TouchableOpacity } from "react-native";
 import * as Location from "expo-location";
 
 import { getPlacesData } from "../api";
 import SearchBar from "../components/SearchBar.js";
 import Map from "../components/Map.js";
-import List from "../components/List.js";
 import { ScrollView } from "react-native-gesture-handler";
 import PlaceDetails from "../components/PlaceDetails";
 
@@ -72,7 +71,7 @@ export default function Home() {
       {isLoading ? (
         <>
           <View className="flex-1 items-center justify-center">
-            <Text className="font-bold text-3xl" >Yükleniyor</Text>
+            <Text className="font-bold text-3xl">Yükleniyor</Text>
           </View>
         </>
       ) : (
@@ -82,18 +81,14 @@ export default function Home() {
             handleRegionChangeComplete={handleRegionChangeComplete}
             location={location}
           />
-          <SearchBar onPlaceSelected={onPlaceSelected} />
-          <ScrollView className="w-full">
-            <List
-              type={type}
-              setType={setType}
-              rating={rating}
-              setRating={setRating}
-            />
-            <PlaceDetails
-              places={filteredPlaces.length ? filteredPlaces : places}
-            />
-          </ScrollView>
+          <SearchBar
+            onPlaceSelected={onPlaceSelected}
+            setType={setType}
+            setRating={setRating}
+          />
+          <PlaceDetails
+            places={filteredPlaces.length ? filteredPlaces : places}
+          />
         </View>
       )}
     </View>
