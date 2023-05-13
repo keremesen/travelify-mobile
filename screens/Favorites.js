@@ -3,10 +3,21 @@ import React from "react";
 import { usePlaces, usePlacesDispatch } from "../context/PlacesContext";
 import { ScrollView } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import Toast from "react-native-toast-message";
 
 const Favorites = () => {
   const places = usePlaces();
   const dispatch = usePlacesDispatch();
+
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Tebrikler",
+      text2: "Başarıyla favorilerden sildiniz.👋",
+      position:"bottom",
+    });
+  };
+
 
   return (
     <ScrollView className="bg-gray-100 h-screen m-4">
@@ -28,6 +39,7 @@ const Favorites = () => {
           </View>
           <Pressable
             onPress={() => {
+              showToast();
               dispatch({
                 type: "deleted",
                 id: place.id,

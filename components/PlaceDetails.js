@@ -7,17 +7,33 @@ import {
   Animated,
   Dimensions,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { usePlacesDispatch } from "../context/PlacesContext";
+import Toast from "react-native-toast-message";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = height / 4;
 const CARD_WIDTH = CARD_HEIGHT + 50;
+
 const PlaceDetails = ({ places }) => {
   const [index, setIndex] = useState(0);
   const animation = new Animated.Value(0);
+  const dispatch = usePlacesDispatch();
+
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Tebrikler",
+      text2: "Başarıyla favorilere eklendi👋",
+      position:"bottom",
+    });
+  };
+
   return (
     <Animated.ScrollView
       horizontal
@@ -42,8 +58,31 @@ const PlaceDetails = ({ places }) => {
       {places?.map((place, index) => (
         <ScrollView
           key={index}
-          className=" h-56 w-64   bg-white   rounded-md overflow-hidden mx-2"
+          className=" h-56 w-64   bg-gray-100   rounded-md overflow-hidden mx-2"
         >
+          <Pressable
+            className="absolute bg-white rounded-sm p-1 right-0 m-2 z-10"
+            style={{ elevation: 4 }}
+            onPress={() => {
+              showToast();
+              dispatch({
+                type: "added",
+                id: nextId++,
+                image: place?.photo.images.large.url
+                  ? place.photo.images.large.url
+                  : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg",
+                name: place?.name,
+                address: place?.address,
+              });
+              
+            }}
+          >
+            <MaterialCommunityIcons
+              name="bookmark-plus-outline"
+              size={24}
+              color="black"
+            />
+          </Pressable>
           <Image
             className="h-32"
             source={{
@@ -118,6 +157,7 @@ const PlaceDetails = ({ places }) => {
     </Animated.ScrollView>
   );
 };
+let nextId = 7;
 
 const styles = StyleSheet.create({
   container: {

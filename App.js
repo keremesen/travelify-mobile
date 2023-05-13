@@ -5,9 +5,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Fontisto } from "@expo/vector-icons";
 import Home from "./screens/Home";
 import Favorites from "./screens/Favorites";
 import { PlacesProvider } from "./context/PlacesContext";
+import Toast from "react-native-toast-message";
 
 const Stack = createStackNavigator();
 
@@ -25,6 +27,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
     </PlacesProvider>
   );
 }
@@ -59,7 +62,7 @@ function MyTabs() {
         options={{
           tabBarLabel: "Favorites",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="star" color={color} size={size} />
+            <Fontisto name="favorite" size={24} color={color} size={size} />
           ),
         }}
       />

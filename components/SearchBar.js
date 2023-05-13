@@ -12,7 +12,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
-const SearchBar = ({ onPlaceSelected, setType, setRating }) => {
+const SearchBar = ({ onPlaceSelected, type, setType, rating, setRating }) => {
   const categories = [
     {
       name: "Restaurants",
@@ -31,22 +31,22 @@ const SearchBar = ({ onPlaceSelected, setType, setRating }) => {
     },
     {
       name: "All",
-      value: 0,
+      value: "0",
       icon: <Ionicons name="star" size={24} color="gold" />,
     },
     {
       name: "3.0",
-      value: 3.0,
+      value: "3.0",
       icon: <Ionicons name="star" size={24} color="gold" />,
     },
     {
       name: "4.0",
-      value: 4.0,
+      value: "4.0",
       icon: <Ionicons name="star" size={24} color="gold" />,
     },
     {
       name: "4.5",
-      value: 4.5,
+      value: "4.5",
       icon: <Ionicons name="star" size={24} color="gold" />,
     },
   ];
@@ -82,7 +82,9 @@ const SearchBar = ({ onPlaceSelected, setType, setRating }) => {
             onPress={() =>
               item.value ? setRating(item.value) : setType(item.handleType)
             }
+          style={{ backgroundColor: type===item.handleType? "#cbd5e1" : "white" && rating===item.value? "#cbd5e1" : "white" }}
           >
+            {console.log(rating)}
             {item.icon}
             <Text>{item.name} </Text>
           </TouchableOpacity>

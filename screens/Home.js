@@ -7,17 +7,16 @@ import SearchBar from "../components/SearchBar.js";
 import Map from "../components/Map.js";
 import { ScrollView } from "react-native-gesture-handler";
 import PlaceDetails from "../components/PlaceDetails";
+import Toast from "react-native-toast-message";
 
-const { width, height } = Dimensions.get("window");
 
-const ASPECT_RATIO = width / height;
 
 export default function Home() {
   const [location, setLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [places, setPlaces] = useState([]);
   const [type, setType] = useState("restaurants");
-  const [rating, setRating] = useState("");
+  const [rating, setRating] = useState(0);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
 
   useEffect(() => {
@@ -49,7 +48,7 @@ export default function Home() {
         details?.geometry.viewport.southwest.lat,
       longitudeDelta:
         details?.geometry.viewport.northeast.lat -
-        details?.geometry.viewport.southwest.lat * ASPECT_RATIO,
+        details?.geometry.viewport.southwest.lat ,
     });
   };
 
@@ -83,12 +82,15 @@ export default function Home() {
           />
           <SearchBar
             onPlaceSelected={onPlaceSelected}
+            type={type}
             setType={setType}
+            rating={rating}
             setRating={setRating}
           />
           <PlaceDetails
             places={filteredPlaces.length ? filteredPlaces : places}
           />
+          <Toast />
         </View>
       )}
     </View>
