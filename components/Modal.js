@@ -2,9 +2,19 @@ import React from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { usePlacesDispatch } from "../context/PlacesContext";
+import Toast from "react-native-toast-message";
 
 const MyModal = ({ modalVisible, setModalVisible, place }) => {
   const dispatch = usePlacesDispatch();
+
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Tebrikler",
+      text2: "Başarıyla favorilere eklendi👋",
+      position:"bottom",
+    });
+  };
   return (
     <View>
       <Modal
@@ -67,6 +77,7 @@ const MyModal = ({ modalVisible, setModalVisible, place }) => {
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => {
                   setModalVisible(!modalVisible);
+                  showToast();
                   dispatch({
                     type: "added",
                     id: nextId++,

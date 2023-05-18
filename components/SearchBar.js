@@ -51,7 +51,7 @@ const SearchBar = ({ onPlaceSelected, type, setType, rating, setRating }) => {
     },
   ];
   return (
-    <>
+    <View style={styles.container}>
       <GooglePlacesAutocomplete
         placeholder="Search"
         fetchDetails
@@ -66,12 +66,11 @@ const SearchBar = ({ onPlaceSelected, type, setType, rating, setRating }) => {
           language: "en",
         }}
         styles={{
-          container: styles.autocompleteContainer,
           textInput: styles.autocompleteTextInput,
         }}
       />
       <FlatList
-        className="absolute top-28 "
+        className=" mt-2"
         horizontal
         scrollEventThrottle={1}
         showsHorizontalScrollIndicator={false}
@@ -84,20 +83,19 @@ const SearchBar = ({ onPlaceSelected, type, setType, rating, setRating }) => {
             }
           style={{ backgroundColor: type===item.handleType? "#cbd5e1" : "white" && rating===item.value? "#cbd5e1" : "white" }}
           >
-            {console.log(rating)}
             {item.icon}
             <Text>{item.name} </Text>
           </TouchableOpacity>
         )}
       />
-    </>
+    </View>
   );
 };
 
 export default SearchBar;
 
 const styles = StyleSheet.create({
-  autocompleteContainer: {
+  container: {
     position: "absolute",
     top: 50,
     left: 10,
