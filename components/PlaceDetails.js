@@ -21,8 +21,6 @@ const CARD_HEIGHT = height / 4;
 const CARD_WIDTH = CARD_HEIGHT + 50;
 
 const PlaceDetails = ({ places }) => {
-  const [index, setIndex] = useState(0);
-  const animation = new Animated.Value(0);
   const dispatch = usePlacesDispatch();
 
   const showToast = () => {
@@ -35,26 +33,7 @@ const PlaceDetails = ({ places }) => {
   };
 
   return (
-    <Animated.ScrollView
-      horizontal
-      scrollEventThrottle={1}
-      showsHorizontalScrollIndicator={false}
-      snapToInterval={CARD_WIDTH}
-      onScroll={Animated.event(
-        [
-          {
-            nativeEvent: {
-              contentOffset: {
-                x: animation,
-              },
-            },
-          },
-        ],
-        { useNativeDriver: true }
-      )}
-      style={styles.scrollView}
-      contentContainerStyle={styles.endPadding}
-    >
+    <>
       {places?.map((place, index) => (
         <ScrollView
           key={index}
@@ -154,7 +133,7 @@ const PlaceDetails = ({ places }) => {
           </View>
         </ScrollView>
       ))}
-    </Animated.ScrollView>
+      </>
   );
 };
 let nextId = 7;

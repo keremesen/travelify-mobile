@@ -87,9 +87,9 @@ export default function Home() {
             rating={rating}
             setRating={setRating}
           />
-          <PlaceDetails
+          {/* <PlaceDetails
             places={filteredPlaces.length ? filteredPlaces : places}
-          />
+          /> */}
           <Toast />
         </View>
       )}
